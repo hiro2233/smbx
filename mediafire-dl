@@ -97,6 +97,7 @@ def download(url, output, quiet):
     return output
 
 if __name__ == "__main__":
+    path = '.'
     for url in sys.argv[1:]:
         ftmp = download(url,output=None,quiet=False)
-        os.rename(ftmp, 'sound_pack.zip')
+        os.rename(os.path.join(path,ftmp),os.path.join(path, ftmp.replace(' ', '_').lower()))
