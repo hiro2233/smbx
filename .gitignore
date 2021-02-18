@@ -7,6 +7,19 @@
 *.o
 *.obj
 
+# Object files
+*.o
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.exp
+
+# Patch and wiggle related residdue
+*.rej
+*.porig
+
 # Precompiled Headers
 *.gch
 *.pch
@@ -26,7 +39,39 @@
 *.a
 *.lib
 
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
 # Executables
 *.exe
 *.out
 *.app
+
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# datadump
+/tools/ddump/*
+
+# Text editor remnants
+*.swp
+.vscode/*
+.idea/*
+
+# General project-specific ignores
+build/*
+
