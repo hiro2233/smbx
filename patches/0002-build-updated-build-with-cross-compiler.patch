@@ -1,0 +1,192 @@
+From 669f1b036ab4035207bbc2f09f572bc7157da7c7 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Thu, 11 Feb 2021 07:23:29 -0400
+Subject: [PATCH 2/2] build: updated build with cross compiler.
+
+---
+ Makefile | 64 +++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 31 insertions(+), 33 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 621aedd9..2ec294ab 100644
+--- a/Makefile
++++ b/Makefile
+@@ -10,7 +10,7 @@ default: all
+ # These options can either be changed by modifying the makefile, or
+ # by building with 'make SETTING=value'. 'make clean' may be required.
+ 
+-# Build debug version
++# Build debug version (default)
+ DEBUG ?= 0
+ # Version of the game to build
+ VERSION ?= us
+@@ -31,7 +31,7 @@ TARGET_WEB ?= 0
+ OSX_BUILD ?= 0
+ 
+ # Enable -no-pie linker option
+-NO_PIE ?= 1
++NO_PIE ?= 0
+ 
+ # Specify the target you are building for, TARGET_BITS=0 means native
+ TARGET_ARCH ?= native
+@@ -110,7 +110,7 @@ ifeq ($(WINDOWS_BUILD),1)
+ endif
+ 
+ ifneq ($(TARGET_BITS),0)
+-  BITS := -m$(TARGET_BITS)
++#  BITS := -m$(TARGET_BITS)
+ endif
+ 
+ # Release (version) flag defs
+@@ -308,11 +308,11 @@ MIPSBIT := -32
+ ifeq ($(DEBUG),1)
+   OPT_FLAGS := -g
+ else
+-  OPT_FLAGS := -O2
++  OPT_FLAGS := -O3
+ endif
+ 
+ # Set BITS (32/64) to compile for
+-OPT_FLAGS += $(BITS)
++OPT_FLAGS += -funroll-loops -ffunction-sections -fdata-sections
+ 
+ ifeq ($(TARGET_WEB),1)
+   OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
+@@ -434,21 +434,21 @@ ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
+ 
+ # Huge deleted N64 section was here
+ 
+-AS := $(CROSS)as
++AS := $(CROSS_COMPILE)as
+ 
+ ifeq ($(OSX_BUILD),1)
+ AS := i686-w64-mingw32-as
+ endif
+ 
+ ifneq ($(TARGET_WEB),1) # As in, not-web PC port
+-  CC ?= $(CROSS)gcc
+-  CXX ?= $(CROSS)g++
++  CC := $(CROSS_COMPILE)gcc
++  CXX := $(CROSS_COMPILE)g++
+ else
+   CC := emcc
+   CXX := emcc
+ endif
+ 
+-LD := $(CC)
++LD := $(CXX)
+ 
+ ifeq ($(DISCORDRPC),1)
+   LD := $(CXX)
+@@ -471,23 +471,25 @@ else ifeq ($(OSX_BUILD),1)
+   OBJDUMP := i686-w64-mingw32-objdump
+   OBJCOPY := i686-w64-mingw32-objcopy
+ else # Linux & other builds
+-  CPP := $(CROSS)cpp -P
+-  OBJCOPY := $(CROSS)objcopy
+-  OBJDUMP := $(CROSS)objdump
++  CPP := $(CROSS_COMPILE)cpp -P
++  OBJCOPY := $(CROSS_COMPILE)objcopy
++  OBJDUMP := $(CROSS_COMPILE)objdump
+ endif
+ 
+ PYTHON := python3
+-SDLCONFIG := $(CROSS)sdl2-config
++SDLCONFIG := pkg-config sdl2
+ 
+ # configure backend flags
+ 
+ BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_API)=1
+ # can have multiple controller APIs
+ BACKEND_CFLAGS += $(foreach capi,$(CONTROLLER_API),-DCAPI_$(capi)=1)
+-BACKEND_LDFLAG0S :=
+ 
++BACKEND_LDFLAG0S :=
+ SDL1_USED := 0
+ SDL2_USED := 0
++BACKEND_LDFLAGS :=
++SDL_USED := 2
+ 
+ # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
+ ifeq ($(WINDOW_API),DXGI)
+@@ -524,10 +526,10 @@ endif
+ # SDL can be used by different systems, so we consolidate all of that shit into this
+ 
+ ifeq ($(SDL2_USED),1)
+-  SDLCONFIG := $(CROSS)sdl2-config
++  SDLCONFIG := $(SDLCONFIG)
+   BACKEND_CFLAGS += -DHAVE_SDL2=1
+ else ifeq ($(SDL1_USED),1)
+-  SDLCONFIG := $(CROSS)sdl-config
++  SDLCONFIG := $(SDLCONFIG)
+   BACKEND_CFLAGS += -DHAVE_SDL1=1
+ endif
+ 
+@@ -626,7 +628,7 @@ ifeq ($(TARGET_WEB),1)
+   LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=64MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
+ 
+ else ifeq ($(WINDOWS_BUILD),1)
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
++  LDFLAGS := -Llib -lpthread $(BACKEND_LDFLAGS) -static
+   ifeq ($(CROSS),)
+     LDFLAGS += -no-pie
+   endif
+@@ -641,11 +643,7 @@ else ifeq ($(OSX_BUILD),1)
+   LDFLAGS := -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+ 
+ else
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -lpthread -ldl
+-  ifeq ($(NO_PIE), 1)
+-    LDFLAGS += -no-pie
+-  endif
+-
++  LDFLAGS := -lm $(BACKEND_LDFLAGS) -no-pie -lpthread -Wl,--gc-sections
+   ifeq ($(DISCORDRPC),1)
+     LDFLAGS += -Wl,-rpath .
+   endif
+@@ -927,14 +925,14 @@ $(BUILD_DIR)/actors/%.o: OPT_FLAGS := -g
+ $(BUILD_DIR)/bin/%.o: OPT_FLAGS := -g
+ $(BUILD_DIR)/src/goddard/%.o: OPT_FLAGS := -g
+ $(BUILD_DIR)/src/goddard/%.o: MIPSISET := -mips1
+-$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
+-$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O2 -framepointer -Wo,-loopunroll,0
++$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O3 -Wo,-loopunroll,0
++$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O3 -framepointer -Wo,-loopunroll,0
+ $(BUILD_DIR)/lib/src/%.o: OPT_FLAGS :=
+ $(BUILD_DIR)/lib/src/math/ll%.o: MIPSISET := -mips3 -32
+-$(BUILD_DIR)/lib/src/math/%.o: OPT_FLAGS := -O2
++$(BUILD_DIR)/lib/src/math/%.o: OPT_FLAGS := -O3
+ $(BUILD_DIR)/lib/src/math/ll%.o: OPT_FLAGS :=
+-$(BUILD_DIR)/lib/src/ldiv.o: OPT_FLAGS := -O2
+-$(BUILD_DIR)/lib/src/string.o: OPT_FLAGS := -O2
++$(BUILD_DIR)/lib/src/ldiv.o: OPT_FLAGS := -O3
++$(BUILD_DIR)/lib/src/string.o: OPT_FLAGS := -O3
+ $(BUILD_DIR)/lib/src/gu%.o: OPT_FLAGS := -O3
+ $(BUILD_DIR)/lib/src/al%.o: OPT_FLAGS := -O3
+ 
+@@ -946,16 +944,16 @@ $(BUILD_DIR)/lib/src/sprintf.o: OPT_FLAGS := -O3
+ 
+ # enable loop unrolling except for external.c (external.c might also have used
+ # unrolling, but it makes one loop harder to match)
+-$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O2
+-$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O2
+-$(BUILD_DIR)/src/audio/external.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
++$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O3
++$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O3
++$(BUILD_DIR)/src/audio/external.o: OPT_FLAGS := -O3 -Wo,-loopunroll,0
+ else
+ 
+ # The source-to-source optimizer copt is enabled for audio. This makes it use
+ # acpp, which needs -Wp,-+ to handle C++-style comments.
+-$(BUILD_DIR)/src/audio/effects.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0 -sopt,-inline=sequence_channel_process_sound,-scalaroptimize=1 -Wp,-+
+-$(BUILD_DIR)/src/audio/synthesis.o: OPT_FLAGS := -O2 -sopt,-scalaroptimize=1 -Wp,-+
+-#$(BUILD_DIR)/src/audio/seqplayer.o: OPT_FLAGS := -O2 -sopt,-inline_manual,-scalaroptimize=1 -Wp,-+ #-Wo,-v,-bb,-l,seqplayer_list.txt
++$(BUILD_DIR)/src/audio/effects.o: OPT_FLAGS := -O3 -Wo,-loopunroll,0 -sopt,-inline=sequence_channel_process_sound,-scalaroptimize=1 -Wp,-+
++$(BUILD_DIR)/src/audio/synthesis.o: OPT_FLAGS := -O3 -sopt,-scalaroptimize=1 -Wp,-+
++#$(BUILD_DIR)/src/audio/seqplayer.o: OPT_FLAGS := -O3 -sopt,-inline_manual,-scalaroptimize=1 -Wp,-+ #-Wo,-v,-bb,-l,seqplayer_list.txt
+ 
+ # Add a target for build/eu/src/audio/*.copt to make it easier to see debug
+ $(BUILD_DIR)/src/audio/%.acpp: src/audio/%.c
+-- 
+2.17.3
+

@@ -1,0 +1,25 @@
+From 007c317ea8c24a73c5438c6d47872f7bbdb1fa24 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 05:02:37 -0400
+Subject: [PATCH] actors: warp_pipe: removed inc.c extension.
+
+---
+ actors/warp_pipe/model.inc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/actors/warp_pipe/model.inc.c b/actors/warp_pipe/model.inc.c
+index 503940ab..46efb10b 100644
+--- a/actors/warp_pipe/model.inc.c
++++ b/actors/warp_pipe/model.inc.c
+@@ -3,7 +3,7 @@ Lights1 warp_pipe_black_lights = gdSPDefLights1(
+ 	0x0, 0x0, 0x0, 0x28, 0x28, 0x28);
+ 
+ u8 warp_pipe_pipe_green_rgba16[] = {
+-	#include "actors/warp_pipe/pipe_green.rgba16.inc.c"
++	"actors/warp_pipe/pipe_green.rgba16"
+ };
+ Vtx warp_pipe_000_displaylist_mesh_vtx_0[140] = {
+ 	{{{125, 172, -52},0, {1825, 982},{0x78, 0x0, 0xD7, 0xFF}}},
+-- 
+2.17.3
+

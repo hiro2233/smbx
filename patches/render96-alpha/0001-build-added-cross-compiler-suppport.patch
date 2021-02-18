@@ -1,0 +1,111 @@
+From e96048978a438e430800a3d285d067baacb2e0f9 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 01:53:33 -0400
+Subject: [PATCH 1/5] build: added cross compiler suppport.
+
+---
+ Makefile       | 24 ++++++++++++------------
+ tools/Makefile |  4 ++--
+ 2 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a0344ec3..c95114aa 100644
+--- a/Makefile
++++ b/Makefile
+@@ -105,7 +105,7 @@ ifeq ($(WINDOWS_BUILD),1)
+ endif
+ 
+ ifneq ($(TARGET_BITS),0)
+-  BITS := -m$(TARGET_BITS)
++  BITS :=
+ endif
+ 
+ # Release (version) flag defs
+@@ -263,7 +263,7 @@ else
+ endif
+ 
+ # Set BITS (32/64) to compile for
+-OPT_FLAGS += $(BITS)
++OPT_FLAGS +=
+ 
+ ifeq ($(TARGET_WEB),1)
+   OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
+@@ -398,15 +398,15 @@ endif
+ # for some reason sdl-config in dka64 is not prefixed, while pkg-config is
+ SDLCROSS ?= $(CROSS)
+ 
+-AS := $(CROSS)as
++AS := $(CROSS_COMPILE)as
+ 
+ ifeq ($(OSX_BUILD),1)
+ AS := i686-w64-mingw32-as
+ endif
+ 
+ ifneq ($(TARGET_WEB),1) # As in, not-web PC port
+-  CC ?= $(CROSS)gcc
+-  CXX ?= $(CROSS)g++
++  CC ?= $(CROSS_COMPILE)gcc
++  CXX ?= $(CROSS_COMPILE)g++
+ else
+   CC := emcc
+   CXX := emcc
+@@ -435,13 +435,13 @@ else ifeq ($(OSX_BUILD),1)
+   OBJDUMP := i686-w64-mingw32-objdump
+   OBJCOPY := i686-w64-mingw32-objcopy
+ else # Linux & other builds
+-  CPP := $(CROSS)cpp -P
+-  OBJCOPY := $(CROSS)objcopy
+-  OBJDUMP := $(CROSS)objdump
++  CPP := $(CROSS_COMPILE)cpp -P
++  OBJCOPY := $(CROSS_COMPILE)objcopy
++  OBJDUMP := $(CROSS_COMPILE)objdump
+ endif
+ 
+ PYTHON := python3
+-SDLCONFIG := $(SDLCROSS)sdl2-config
++SDLCONFIG := pkg-config sdl2
+ 
+ # configure backend flags
+ 
+@@ -449,7 +449,7 @@ BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_A
+ # can have multiple controller APIs
+ BACKEND_CFLAGS += $(foreach capi,$(CONTROLLER_API),-DCAPI_$(capi)=1)
+ BACKEND_LDFLAGS :=
+-SDL2_USED := 0
++SDL2_USED := 1
+ 
+ # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
+ ifeq ($(WINDOW_API),DXGI)
+@@ -586,7 +586,7 @@ ifeq ($(TARGET_WEB),1)
+ LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=20MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
+ 
+ else ifeq ($(WINDOWS_BUILD),1)
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
++  LDFLAGS := $(BITS) -Llib -lpthread $(BACKEND_LDFLAGS) -static
+   ifeq ($(CROSS),)
+     LDFLAGS += -no-pie
+   endif
+@@ -604,7 +604,7 @@ else ifeq ($(TARGET_SWITCH),1)
+   LDFLAGS := -specs=$(LIBNX)/switch.specs $(NXARCH) $(OPT_FLAGS) -no-pie -L$(LIBNX)/lib $(BACKEND_LDFLAGS) -lstdc++ -lnx -lm
+ 
+ else
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
++  LDFLAGS := $(BITS) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+   ifeq ($(DISCORDRPC),1)
+     LDFLAGS += -ldl -Wl,-rpath .
+   endif
+diff --git a/tools/Makefile b/tools/Makefile
+index efc9cba8..1b4d6176 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -1,5 +1,5 @@
+-CC ?= gcc
+-CXX ?= g++
++CC = gcc
++CXX = g++
+ CFLAGS := -I../include -I. -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 -O2 -s
+ LDFLAGS := -lm
+ PROGRAMS := n64graphics aifc_decode aiff_extract_codebook mio0 vadpcm_enc tabledesign skyconv
+-- 
+2.17.3
+

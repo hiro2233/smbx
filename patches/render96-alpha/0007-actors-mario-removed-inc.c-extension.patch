@@ -1,0 +1,95 @@
+From 35bb22e4441b2a548ff60002736e54b88283d72d Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 04:42:32 -0400
+Subject: [PATCH] actors: mario: removed inc.c extension.
+
+---
+ actors/mario/model.inc.c     | 26 +++++++++++++-------------
+ actors/mario_cap/model.inc.c |  6 +++---
+ 2 files changed, 21 insertions(+), 16 deletions(-)
+
+diff --git a/actors/mario/model.inc.c b/actors/mario/model.inc.c
+index 64f782cb..10df983a 100644
+--- a/actors/mario/model.inc.c
++++ b/actors/mario/model.inc.c
+@@ -39,43 +39,43 @@ Lights1 mario_sole_lights = gdSPDefLights1(
+ 	0xFE, 0xFE, 0xFE, 0x28, 0x28, 0x28);
+ 
+ u8 mario_mario_pants_rgba16[] = {
+-	#include "actors/mario/mario_pants.rgba16.inc.c"
++	"actors/mario/mario_pants.rgba16"
+ };
+ u8 mario_mario_metal_new_rgba32[] = {
+-	#include "actors/mario/mario_metal_new.rgba32.inc.c"
++	"actors/mario/mario_metal_new.rgba32"
+ };
+ u8 mario_mario_shirt_rgba16[] = {
+-	#include "actors/mario/mario_shirt.rgba16.inc.c"
++	"actors/mario/mario_shirt.rgba16"
+ };
+ u8 mario_mario_buttons_rgba16[] = {
+-	#include "actors/mario/mario_buttons.rgba16.inc.c"
++	"actors/mario/mario_buttons.rgba16"
+ };
+ u8 mario_mario_hair_rgba16[] = {
+-	#include "actors/mario/mario_hair.rgba16.inc.c"
++	"actors/mario/mario_hair.rgba16"
+ };
+ u8 mario_mario_moustache_rgba16[] = {
+-	#include "actors/mario/mario_moustache.rgba16.inc.c"
++	"actors/mario/mario_moustache.rgba16"
+ };
+ u8 mario_mario_eye_open_rgba16[] = {
+-	#include "actors/mario/mario_eye_open.rgba16.inc.c"
++	"actors/mario/mario_eye_open.rgba16"
+ };
+ u8 mario_M_rgba16[] = {
+-	#include "actors/mario/M.rgba16.inc.c"
++	"actors/mario/M.rgba16"
+ };
+ u8 mario_mario_eye_halfopen_rgba16[] = {
+-	#include "actors/mario/mario_eye_halfopen.rgba16.inc.c"
++	"actors/mario/mario_eye_halfopen.rgba16"
+ };
+ u8 mario_mario_eye_closed_rgba16[] = {
+-	#include "actors/mario/mario_eye_closed.rgba16.inc.c"
++	"actors/mario/mario_eye_closed.rgba16"
+ };
+ u8 mario_mario_eye_dead_rgba32[] = {
+-	#include "actors/mario/mario_eye_dead.rgba32.inc.c"
++	"actors/mario/mario_eye_dead.rgba32"
+ };
+ u8 mario_mario_shoes_rgba16[] = {
+-	#include "actors/mario/mario_shoes.rgba16.inc.c"
++	"actors/mario/mario_shoes.rgba16"
+ };
+ u8 mario_mario_sole_rgba16[] = {
+-	#include "actors/mario/mario_sole.rgba16.inc.c"
++	"actors/mario/mario_sole.rgba16"
+ };
+ Vtx mario_000_offset_mesh_vtx_0[541] = {
+ 	{{{-35, 18, -1},0, {2032, 1008},{0x81, 0xFF, 0x0, 0xFF}}},
+diff --git a/actors/mario_cap/model.inc.c b/actors/mario_cap/model.inc.c
+index 94da91b2..22f9b3c1 100644
+--- a/actors/mario_cap/model.inc.c
++++ b/actors/mario_cap/model.inc.c
+@@ -7,13 +7,13 @@ Lights1 mario_cap_cap_m_lights = gdSPDefLights1(
+ 	0xFE, 0xFE, 0xFE, 0x28, 0x28, 0x28);
+ 
+ u8 mario_cap_M_rgba16[] = {
+-	#include "actors/mario_cap/M.rgba16.inc.c"
++	"actors/mario_cap/M.rgba16"
+ };
+ u8 mario_cap_body_rgba16[] = {
+-	#include "actors/mario_cap/body.rgba16.inc.c"
++	"actors/mario_cap/body.rgba16"
+ };
+ u8 mario_cap_metal_test_rgba16[] = {
+-	#include "actors/mario_cap/metal_test.rgba16.inc.c"
++	"actors/mario_cap/metal_test.rgba16"
+ };
+ Vtx mario_cap_000_displaylist_mesh_vtx_0[5580] = {
+ 	{{{67, 110, 57},0, {560, 880},{0x5E, 0xFE, 0x55, 0xFF}}},
+-- 
+2.17.3
+

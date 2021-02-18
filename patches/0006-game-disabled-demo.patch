@@ -1,0 +1,33 @@
+From 6eb2f704fc6934bba14187295279b472c87153fb Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Sat, 13 Feb 2021 05:15:53 -0400
+Subject: [PATCH] game: disabled demo.
+
+---
+ src/game/game_init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/game/game_init.c b/src/game/game_init.c
+index e48f74d..a63c71a 100644
+--- a/src/game/game_init.c
++++ b/src/game/game_init.c
+@@ -456,7 +456,7 @@ void read_controller_inputs(void) {
+         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
+         osContGetReadData(&gControllerPads[0]);
+     }
+-    run_demo_inputs();
++    //run_demo_inputs();
+ 
+     for (i = 0; i < 2; i++) {
+         struct Controller *controller = &gControllers[i];
+@@ -552,6 +552,7 @@ void setup_game_memory(void) {
+     func_80278A78(&D_80339D10, gMarioAnims, D_80339CF0);
+     D_80339CF4 = main_pool_alloc(2048, MEMORY_POOL_LEFT);
+     set_segment_base_addr(24, (void *) D_80339CF4);
++    //func_80278A78(&gDemo, gDemoInputs, D_80339CF4);
+     load_segment(0x10, _entrySegmentRomStart, _entrySegmentRomEnd, MEMORY_POOL_LEFT);
+     load_segment_decompress(2, _segment2_mio0SegmentRomStart, _segment2_mio0SegmentRomEnd);
+ }
+-- 
+2.17.3
+

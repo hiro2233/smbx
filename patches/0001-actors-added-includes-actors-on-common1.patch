@@ -1,0 +1,29 @@
+From b2bf7f352f2620a47eb3ca3c6f87589d463b2fe8 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Thu, 11 Feb 2021 07:22:44 -0400
+Subject: [PATCH 1/2] actors: added includes actors on common1.
+
+---
+ actors/common1.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/actors/common1.h b/actors/common1.h
+index 9a1b650e..f9ae166a 100644
+--- a/actors/common1.h
++++ b/actors/common1.h
+@@ -250,4 +250,12 @@ extern const Gfx wooden_signpost_seg3_dl_0302DCD0[];
+ extern const Gfx wooden_signpost_seg3_dl_0302DD08[];
+ extern const Collision wooden_signpost_seg3_collision_0302DD80[];
+ 
++#include "warp_pipe/geo_header.h"
++#include "mario_cap/geo_header.h"
++#include "lakitu_cameraman/geo_header.h"
++#include "mario/geo_header.h"
++#include "lakitu_enemy/geo_header.h"
++#include "peach/geo_header.h"
++
++
+ #endif
+-- 
+2.17.3
+

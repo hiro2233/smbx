@@ -1,0 +1,484 @@
+From 179de78e305c8d682edafb5eacdb6ac5c7ddcd77 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Wed, 17 Feb 2021 03:36:50 -0400
+Subject: [PATCH] sound: set to null missing sounds.
+
+---
+ sound/sound_banks/00.json         | 14 +------
+ sound/sound_banks/01_terrain.json | 49 ++++--------------------
+ sound/sound_banks/03.json         | 63 +++++--------------------------
+ sound/sound_banks/04.json         | 14 +------
+ sound/sound_banks/05.json         | 35 +++--------------
+ sound/sound_banks/06.json         |  7 +---
+ sound/sound_banks/07.json         | 29 ++------------
+ sound/sound_banks/09.json         | 37 +++---------------
+ 8 files changed, 34 insertions(+), 214 deletions(-)
+
+diff --git a/sound/sound_banks/00.json b/sound/sound_banks/00.json
+index 02ef6c71..6f3fc546 100644
+--- a/sound/sound_banks/00.json
++++ b/sound/sound_banks/00.json
+@@ -15,11 +15,6 @@
+             "envelope": "envelope0",
+             "sound": "00_twirl"
+         },
+-        "inst1": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "01_brushing"
+-        },
+         "inst2": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -34,19 +29,12 @@
+             "release_rate": 208,
+             "envelope": "envelope0",
+             "sound": "04_plop"
+-        },
+-        "inst5": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "05_heavy_landing"
+         }
+     },
+     "instrument_list": [
+         "inst0",
+-        "inst1",
+         "inst2",
+         "inst3",
+-        "inst4",
+-        "inst5"
++        "inst4"
+     ]
+ }
+diff --git a/sound/sound_banks/01_terrain.json b/sound/sound_banks/01_terrain.json
+index 5d233ac6..d31e07c4 100644
+--- a/sound/sound_banks/01_terrain.json
++++ b/sound/sound_banks/01_terrain.json
+@@ -16,56 +16,21 @@
+         ]
+     },
+     "instruments": {
+-        "inst0": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "00_step_default"
+-        },
+-        "inst1": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "01_step_grass"
+-        },
+-        "inst2": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "02_step_stone"
+-        },
+-        "inst3": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "03_step_spooky"
+-        },
+-        "inst4": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "04_step_snow"
+-        },
+-        "inst5": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "05_step_ice"
+-        },
+         "inst6": {
+             "release_rate": 48,
+             "envelope": "envelope1",
+             "sound": "06_step_metal"
+-        },
+-        "inst7": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "07_step_sand"
+         }
+     },
+     "instrument_list": [
+-        "inst0",
+-        "inst1",
+         null,
+-        "inst2",
+-        "inst3",
+-        "inst4",
+-        "inst5",
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
+         "inst6",
+-        "inst7"
++        null
+     ]
+ }
+diff --git a/sound/sound_banks/03.json b/sound/sound_banks/03.json
+index 66d6835c..cde7fc45 100644
+--- a/sound/sound_banks/03.json
++++ b/sound/sound_banks/03.json
+@@ -10,51 +10,6 @@
+         ]
+     },
+     "instruments": {
+-        "inst0": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "00"
+-        },
+-        "inst1": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "01"
+-        },
+-        "inst2": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "02"
+-        },
+-        "inst3": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "03"
+-        },
+-        "inst4": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "04"
+-        },
+-        "inst5": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "05"
+-        },
+-        "inst6": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "06"
+-        },
+-        "inst7": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "07"
+-        },
+-        "inst8": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "08"
+-        },
+         "inst9": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -62,15 +17,15 @@
+         }
+     },
+     "instrument_list": [
+-        "inst0",
+-        "inst1",
+-        "inst2",
+-        "inst3",
+-        "inst4",
+-        "inst5",
+-        "inst6",
+-        "inst7",
+-        "inst8",
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
+         "inst9"
+     ]
+ }
+diff --git a/sound/sound_banks/04.json b/sound/sound_banks/04.json
+index ee6ef022..5d17310d 100644
+--- a/sound/sound_banks/04.json
++++ b/sound/sound_banks/04.json
+@@ -105,11 +105,6 @@
+             "envelope": "envelope5",
+             "sound": "05"
+         },
+-        "inst6": {
+-            "release_rate": 119,
+-            "envelope": "envelope6",
+-            "sound": "06"
+-        },
+         "inst7": {
+             "release_rate": 123,
+             "envelope": "envelope0",
+@@ -120,11 +115,6 @@
+             "envelope": "envelope8",
+             "sound": "08"
+         },
+-        "inst9": {
+-            "release_rate": 114,
+-            "envelope": "envelope4",
+-            "sound": "09"
+-        },
+         "inst10": {
+             "release_rate": 128,
+             "envelope": "envelope5",
+@@ -153,11 +143,11 @@
+         "inst3",
+         "inst4",
+         "inst5",
+-        "inst6",
++        null,
+         null,
+         "inst7",
+         "inst8",
+-        "inst9",
++        null,
+         "inst10",
+         null,
+         "inst11",
+diff --git a/sound/sound_banks/05.json b/sound/sound_banks/05.json
+index 7b2d94e2..8007fba7 100644
+--- a/sound/sound_banks/05.json
++++ b/sound/sound_banks/05.json
+@@ -16,21 +16,11 @@
+         ]
+     },
+     "instruments": {
+-        "inst0": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "0E"
+-        },
+         "inst1": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+             "sound": "0F"
+         },
+-        "inst2": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "10"
+-        },
+         "inst3": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -41,11 +31,6 @@
+             "envelope": "envelope1",
+             "sound": "02"
+         },
+-        "inst5": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "12"
+-        },
+         "inst6": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -76,11 +61,6 @@
+             "envelope": "envelope0",
+             "sound": "18"
+         },
+-        "inst12": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "19"
+-        },
+         "inst13": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -90,29 +70,24 @@
+             "release_rate": 208,
+             "envelope": "envelope0",
+             "sound": "1B"
+-        },
+-        "inst15": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "1C"
+         }
+     },
+     "instrument_list": [
+-        "inst0",
++        null,
+         "inst1",
+-        "inst2",
++        null,
+         "inst3",
+         "inst4",
+-        "inst5",
++        null,
+         "inst6",
+         "inst7",
+         "inst8",
+         "inst9",
+         "inst10",
+         "inst11",
+-        "inst12",
++        null,
+         "inst13",
+         "inst14",
+-        "inst15"
++        null
+     ]
+ }
+diff --git a/sound/sound_banks/06.json b/sound/sound_banks/06.json
+index 61d12a61..26808a34 100644
+--- a/sound/sound_banks/06.json
++++ b/sound/sound_banks/06.json
+@@ -99,11 +99,6 @@
+             "envelope": "envelope4",
+             "sound": "06"
+         },
+-        "inst7": {
+-            "release_rate": 38,
+-            "envelope": "envelope6",
+-            "sound": "07"
+-        },
+         "inst8": {
+             "release_rate": 208,
+             "envelope": "envelope7",
+@@ -144,7 +139,7 @@
+         "inst4",
+         "inst5",
+         "inst6",
+-        "inst7",
++        null,
+         "inst8",
+         "inst9",
+         "inst10",
+diff --git a/sound/sound_banks/07.json b/sound/sound_banks/07.json
+index 226e4e22..60def5da 100644
+--- a/sound/sound_banks/07.json
++++ b/sound/sound_banks/07.json
+@@ -40,21 +40,11 @@
+         ]
+     },
+     "instruments": {
+-        "inst0": {
+-            "release_rate": 29,
+-            "envelope": "envelope0",
+-            "sound": "00"
+-        },
+         "inst1": {
+             "release_rate": 48,
+             "envelope": "envelope1",
+             "sound": "01"
+         },
+-        "inst2": {
+-            "release_rate": 90,
+-            "envelope": "envelope2",
+-            "sound": "02"
+-        },
+         "inst3": {
+             "release_rate": 48,
+             "envelope": "envelope1",
+@@ -85,11 +75,6 @@
+             "envelope": "envelope5",
+             "sound": "08"
+         },
+-        "inst9": {
+-            "release_rate": 208,
+-            "envelope": "envelope5",
+-            "sound": "09"
+-        },
+         "inst10": {
+             "release_rate": 208,
+             "envelope": "envelope5",
+@@ -104,18 +89,12 @@
+             "release_rate": 208,
+             "envelope": "envelope5",
+             "sound": "0C"
+-        },
+-        "inst13": {
+-            "ifdef": ["VERSION_US", "VERSION_EU"],
+-            "release_rate": 208,
+-            "envelope": "envelope5",
+-            "sound": "0D"
+         }
+     },
+     "instrument_list": [
+-        "inst0",
++        null,
+         "inst1",
+-        "inst2",
++        null,
+         "inst3",
+         null,
+         "inst4",
+@@ -123,10 +102,10 @@
+         "inst6",
+         "inst7",
+         "inst8",
+-        "inst9",
++        null,
+         "inst10",
+         "inst11",
+         "inst12",
+-        "inst13"
++        null
+     ]
+ }
+diff --git a/sound/sound_banks/09.json b/sound/sound_banks/09.json
+index f1dccf5f..df4960b0 100644
+--- a/sound/sound_banks/09.json
++++ b/sound/sound_banks/09.json
+@@ -25,33 +25,6 @@
+         ]
+     },
+     "instruments": {
+-        "inst0": {
+-            "release_rate": 208,
+-            "normal_range_hi": 50,
+-            "envelope": "envelope0",
+-            "sound": "00",
+-            "sound_hi": "01"
+-        },
+-        "inst1": {
+-            "release_rate": 208,
+-            "envelope": "envelope1",
+-            "sound": "02"
+-        },
+-        "inst2": {
+-            "release_rate": 208,
+-            "envelope": "envelope2",
+-            "sound": "00"
+-        },
+-        "inst3": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "03"
+-        },
+-        "inst4": {
+-            "release_rate": 208,
+-            "envelope": "envelope0",
+-            "sound": "04"
+-        },
+         "inst5": {
+             "release_rate": 208,
+             "envelope": "envelope0",
+@@ -64,11 +37,11 @@
+         }
+     },
+     "instrument_list": [
+-        "inst0",
+-        "inst1",
+-        "inst2",
+-        "inst3",
+-        "inst4",
++        null,
++        null,
++        null,
++        null,
++        null,
+         "inst5",
+         "inst6"
+     ]
+-- 
+2.17.3
+

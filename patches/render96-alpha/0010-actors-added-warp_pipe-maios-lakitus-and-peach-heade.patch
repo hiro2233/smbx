@@ -1,0 +1,34 @@
+From 63028e24509fa3368bd36f3f6cf54c20cfc4d082 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 05:19:21 -0400
+Subject: [PATCH] actors: added warp_pipe, maios, lakitus and peach headers.
+
+---
+ actors/common1.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/actors/common1.h b/actors/common1.h
+index b6f3c800..a0fd4185 100644
+--- a/actors/common1.h
++++ b/actors/common1.h
+@@ -256,5 +256,17 @@ extern const Collision wooden_signpost_seg3_collision_0302DD80[];
+ 
+ #include "luigi_cap/geo_header.h"
+ 
++#include "warp_pipe/geo_header.h"
++
++#include "mario_cap/geo_header.h"
++
++#include "mario/geo_header.h"
++
++#include "lakitu_enemy/geo_header.h"
++
++#include "lakitu_cameraman/geo_header.h"
++
++#include "peach/geo_header.h"
++
+ 
+ #endif
+-- 
+2.17.3
+

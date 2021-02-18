@@ -1,0 +1,202 @@
+From 523f146f628ee435d60745dcf0963fa01f0c3114 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 04:14:08 -0400
+Subject: [PATCH 5/5] all: restored mario64 intro and added issue intro.
+
+---
+ levels/intro/geo.c       | 24 ++++++++++++++++++++++++
+ levels/intro/header.h    |  3 +++
+ levels/intro/leveldata.c | 19 +++++++++++++++++++
+ levels/intro/script.c    | 13 +++++++++++++
+ src/game/segment7.h      |  1 +
+ src/menu/intro_geo.c     | 16 +++++++++++++---
+ src/menu/intro_geo.h     |  1 +
+ 7 files changed, 74 insertions(+), 3 deletions(-)
+
+diff --git a/levels/intro/geo.c b/levels/intro/geo.c
+index 8ac70024..eaf12e17 100644
+--- a/levels/intro/geo.c
++++ b/levels/intro/geo.c
+@@ -44,6 +44,30 @@ const GeoLayout intro_geo_0002D0[] = {
+    GEO_END(),
+ };
+ 
++const GeoLayout intro_geo_000470[] = {
++   GEO_NODE_SCREEN_AREA(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
++   GEO_OPEN_NODE(),
++      GEO_ZBUFFER(0),
++      GEO_OPEN_NODE(),
++         GEO_NODE_ORTHO(100),
++         GEO_OPEN_NODE(),
++            GEO_BACKGROUND_COLOR(0x0000),
++         GEO_CLOSE_NODE(),
++      GEO_CLOSE_NODE(),
++      GEO_ZBUFFER(1),
++      GEO_OPEN_NODE(),
++         GEO_CAMERA_FRUSTUM(45, 128, 16384),
++         GEO_OPEN_NODE(),
++            GEO_CAMERA(0, 0, 0, 3200, 0, 0, 0, 0x00000000),
++            GEO_OPEN_NODE(),
++               GEO_ASM(0, geo_title_screen_issue),
++            GEO_CLOSE_NODE(),
++         GEO_CLOSE_NODE(),
++      GEO_CLOSE_NODE(),
++   GEO_CLOSE_NODE(),
++   GEO_END(),
++};
++
+ // 0x0E00035C
+ const GeoLayout intro_geo_00035C[] = {
+    GEO_NODE_SCREEN_AREA(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
+diff --git a/levels/intro/header.h b/levels/intro/header.h
+index f83709df..61ce56ef 100644
+--- a/levels/intro/header.h
++++ b/levels/intro/header.h
+@@ -3,6 +3,9 @@
+ 
+ #include "types.h"
+ 
++extern const GeoLayout intro_geo_000470[];
++extern const Gfx intro_seg7_dl_0700B3A0[];
++
+ // geo
+ extern const GeoLayout intro_geo_0002D0[];
+ extern const GeoLayout intro_geo_00035C[];
+diff --git a/levels/intro/leveldata.c b/levels/intro/leveldata.c
+index 955a5ecc..f3303c80 100644
+--- a/levels/intro/leveldata.c
++++ b/levels/intro/leveldata.c
+@@ -3296,6 +3296,25 @@ static const Gfx intro_seg7_dl_0700ADC0[] = {
+     gsSPEndDisplayList(),
+ };
+ 
++const Gfx intro_seg7_dl_0700B3A0[] = {
++    gsDPPipeSync(),
++    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
++    gsSPClearGeometryMode(G_LIGHTING),
++    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
++    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
++    gsDPTileSync(),
++    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
++    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
++    gsSPDisplayList(intro_seg7_dl_07008EA0),
++    gsSPDisplayList(intro_seg7_dl_07009E38),
++    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
++    gsDPPipeSync(),
++    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
++    gsSPDisplayList(intro_seg7_dl_0700ADC0),
++    gsSPSetGeometryMode(G_LIGHTING),
++    gsSPEndDisplayList(),
++};
++
+ // 0x0700B3A0 - 0x0700B420
+ Lights1 titletest_logo_blue_lights = gdSPDefLights1(
+ 	0x7F, 0x7F, 0x7F,
+diff --git a/levels/intro/script.c b/levels/intro/script.c
+index 4975dbb2..96211391 100644
+--- a/levels/intro/script.c
++++ b/levels/intro/script.c
+@@ -26,10 +26,23 @@ const LevelScript level_intro_entry_1[] = {
+     ALLOC_LEVEL_POOL(),
+ 
+     AREA(/*index*/ 1, intro_geo_0002D0),
++    AREA(/*index*/ 2, intro_geo_000470),
+     END_AREA(),
+ 
+     FREE_LEVEL_POOL(),
++    SLEEP(/*frames*/ 2),
++    LOAD_AREA(/*area*/ 2),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 10, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 10),
++    SLEEP(/*frames*/ 90),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 10, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 10),
++    SLEEP(/*frames*/ 30),
++    CMD2A(/*unk2*/ 1),
++
+     LOAD_AREA(/*area*/ 1),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 5, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 5),
+     CALL(/*arg*/ 0, /*func*/ lvl_intro_update),
+     SLEEP(/*frames*/ 75),
+     TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0x00, 0x00, 0x00),
+diff --git a/src/game/segment7.h b/src/game/segment7.h
+index a9dff890..3ed73bab 100644
+--- a/src/game/segment7.h
++++ b/src/game/segment7.h
+@@ -28,5 +28,6 @@ extern Gfx *titletest_logo_r96_mesh;
+ extern Gfx *intro_seg7_dl_0700C6A0;
+ extern f32 intro_seg7_table_0700C790[];
+ extern f32 intro_seg7_table_0700C880[];
++extern const Gfx intro_seg7_dl_0700B3A0[];
+ 
+ #endif // SEGMENT7_H
+diff --git a/src/menu/intro_geo.c b/src/menu/intro_geo.c
+index 7a8a269d..0be4e95a 100644
+--- a/src/menu/intro_geo.c
++++ b/src/menu/intro_geo.c
+@@ -70,6 +70,8 @@ s8 gameOverBackgroundTable[] = {
+ s8 gameOverBackgroundFlipOrder[] = { 0x00, 0x01, 0x02, 0x03, 0x07, 0x0B,
+                                      0x0a, 0x09, 0x08, 0x04, 0x05, 0x06 };
+ 
++
++
+ #ifdef HIGHFPS
+ static Gfx *sIntroScalePos;
+ static Vec3f sIntroScale;
+@@ -132,7 +134,7 @@ Gfx *geo_title_screen(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
+         guScale(scaleMat, scaleInterpolated[0], scaleInterpolated[1], scaleInterpolated[2]);
+         sIntroScalePos = displayListIter;
+         gSPMatrix(displayListIter++, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
+-        gSPDisplayList(displayListIter++, &titletest_logo_r96_mesh);
++        gSPDisplayList(displayListIter++, &intro_seg7_dl_0700B3A0);
+         gSPPopMatrix(displayListIter++, G_MTX_MODELVIEW);
+         gSPEndDisplayList(displayListIter);
+         gTitleZoomCounter++;
+@@ -182,7 +184,7 @@ Gfx *geo_title_screen(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
+         }
+         guScale(scaleMat, scaleX, scaleY, scaleZ);
+         gSPMatrix(displayListIter++, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
+-        gSPDisplayList(displayListIter++, &titletest_logo_r96_mesh);
++        gSPDisplayList(displayListIter++, &intro_seg7_dl_0700B3A0);
+         gSPPopMatrix(displayListIter++, G_MTX_MODELVIEW);
+         gSPEndDisplayList(displayListIter);
+         gTitleZoomCounter++;
+@@ -191,6 +193,14 @@ Gfx *geo_title_screen(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
+ }
+ #endif
+ 
++Gfx *geo_title_screen_issue(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
++    Gfx *displayList;            // sp48
++    displayList = NULL;
++    print_text_centered(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Builded by");
++    print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko");
++    return displayList;
++}
++
+ Gfx *geo_fade_transition(s32 sp40, struct GraphNode *sp44, UNUSED void *context) {
+     struct GraphNode *graphNode = sp44; // sp3c
+     Gfx *displayList = NULL;            // sp38
+@@ -213,7 +223,7 @@ Gfx *geo_fade_transition(s32 sp40, struct GraphNode *sp44, UNUSED void *context)
+             if (0) {
+             }
+         }
+-        //gSPDisplayList(displayListIter++, &intro_seg7_dl_0700C6A0);
++        gSPDisplayList(displayListIter++, &intro_seg7_dl_0700C6A0);
+         gSPEndDisplayList(displayListIter);
+         if (gTitleZoomCounter >= 0x13) {
+             gTitleFadeCounter += 0x1a;
+diff --git a/src/menu/intro_geo.h b/src/menu/intro_geo.h
+index 6fa6c84f..752cfd4d 100644
+--- a/src/menu/intro_geo.h
++++ b/src/menu/intro_geo.h
+@@ -11,5 +11,6 @@ Gfx *geo_fade_transition(s32 sp40, struct GraphNode *sp44, UNUSED void *context)
+ Gfx *intro_backdrop_one_image(s32 index, s8 *backgroundTable);
+ Gfx *geo_intro_backdrop(s32 sp48, struct GraphNode *sp4c, UNUSED void *context);
+ Gfx *geo_game_over_tile(s32 sp40, struct GraphNode *sp44, UNUSED void *context);
++Gfx *geo_title_screen_issue(s32 sp50, struct GraphNode *sp54, UNUSED void *context);
+ 
+ #endif // INTRO_GEO_H
+-- 
+2.17.3
+

@@ -1,0 +1,30 @@
+From c53d1cbe34aef1df116f7ced9886eede6700efef Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Wed, 17 Feb 2021 09:30:18 -0400
+Subject: [PATCH] pc: added joystick macros defines if missing.
+
+---
+ src/pc/dynamic_options.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/pc/dynamic_options.c b/src/pc/dynamic_options.c
+index ff7bc498..4dc992ed 100644
+--- a/src/pc/dynamic_options.c
++++ b/src/pc/dynamic_options.c
+@@ -17,6 +17,13 @@
+ #include "text/txtconv.h"
+ #endif
+ 
++#ifndef SDL_JOYSTICK_AXIS_MAX
++#define SDL_JOYSTICK_AXIS_MAX   32767
++#endif
++#ifndef SDL_JOYSTICK_AXIS_MIN
++#define SDL_JOYSTICK_AXIS_MIN   -32767
++#endif
++
+ static void *make_copy(const void *p, int s) {
+     void *q = calloc(s, 1);
+     memcpy(q, p, s);
+-- 
+2.17.3
+

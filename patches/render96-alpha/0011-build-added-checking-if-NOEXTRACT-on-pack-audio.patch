@@ -1,0 +1,47 @@
+From 2831c89980dfc46e1456cff6a5a22d0f261d2589 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 05:33:18 -0400
+Subject: [PATCH] build: added checking if NOEXTRACT on pack audio.
+
+---
+ Makefile | 36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a0344ec3..8e02f232 100644
+--- a/Makefile
++++ b/Makefile
+@@ -654,10 +654,12 @@ res: $(BASEPACK_PATH)
+ $(BASEPACK_LST): $(EXE)
+ 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
+ 	@echo -n > $(BASEPACK_LST)
++ifeq ($(NOEXTRACT),)
+ 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sequences.bin sound/sequences.bin" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sound_data.ctl sound/sound_data.ctl" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sound_data.tbl sound/sound_data.tbl" >> $(BASEPACK_LST)
++endif
+ 	@$(foreach f, $(wildcard $(SKYTILE_DIR)/*), echo $(f) gfx/$(f:$(BUILD_DIR)/%=%) >> $(BASEPACK_LST);)
+ 	@find actors -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
+ 	@find levels -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
+@@ -713,13 +715,17 @@ $(ENDIAN_BITWIDTH): tools/determine-endian-bitwidth.c
+ 	@rm $@.dummy2
+ 
+ $(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(ENDIAN_BITWIDTH)
++ifeq ($(NOEXTRACT),)
+ 	$(PYTHON) tools/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
++endif
+ 
+ $(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_BIN_DIR)/sound_data.ctl
+ 	@true
+ 
+ $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json sound/sequences/ sound/sequences/$(VERSION)/ $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
++ifeq ($(NOEXTRACT),)
+ 	$(PYTHON) tools/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
++endif
+ 
+ $(SOUND_BIN_DIR)/bank_sets: $(SOUND_BIN_DIR)/sequences.bin
+ 	@true
+-- 
+2.17.3
+

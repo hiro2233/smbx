@@ -1,0 +1,53 @@
+From 2d302012544a5a6c883d323b04c1214f369c2f1a Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Sat, 13 Feb 2021 05:07:13 -0400
+Subject: [PATCH 4/5] menu: disabled demo.
+
+---
+ src/menu/level_select_menu.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/src/menu/level_select_menu.c b/src/menu/level_select_menu.c
+index b48478d..a4a6bd3 100644
+--- a/src/menu/level_select_menu.c
++++ b/src/menu/level_select_menu.c
+@@ -14,7 +14,7 @@
+ #include "seq_ids.h"
+ #include "sm64.h"
+ 
+-#define PRESS_START_DEMO_TIMER 800
++#define PRESS_START_DEMO_TIMER 400
+ 
+ #define STUB_LEVEL(textname, _1, _2, _3, _4, _5, _6, _7, _8) textname,
+ #define DEFINE_LEVEL(textname, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) textname,
+@@ -48,19 +48,20 @@ int run_press_start_demo_timer(s32 timer) {
+                 // player is idle on PRESS START screen.
+ 
+                 // start the Mario demo animation for the demo list.
+-                load_patchable_table(&gDemo, gDemoInputListID);
++                //load_patchable_table(&gDemo, gDemoInputListID);
+ 
+                 // if the next demo sequence ID is the count limit, reset it back to
+                 // the first sequence.
+-                if (++gDemoInputListID == gDemo.animDmaTable->count) {
++                //if (++gDemoInputListID == gDemo.animDmaTable->count) {
+                     gDemoInputListID = 0;
+-                }
++                //}
+ 
+                 // add 1 (+4) to the pointer to skip the demoID.
+-                gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim) + 1;
+-                timer = (s8)((struct DemoInput *) gDemo.targetAnim)->timer;
+-                gCurrSaveFileNum = 1;
+-                gCurrActNum = 1;
++                //gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim) + 1;
++                //timer = (s8)((struct DemoInput *) gDemo.targetAnim)->timer;
++                //gCurrSaveFileNum = 1;
++                //gCurrActNum = 1;
++                gDemoCountdown = 0;
+             }
+         } else { // activity was detected, so reset the demo countdown.
+             gDemoCountdown = 0;
+-- 
+2.17.3
+

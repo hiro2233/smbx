@@ -1,0 +1,62 @@
+From cc6f326f4d527caadced4e58038c02c84a44828b Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Mon, 15 Feb 2021 21:44:38 -0400
+Subject: [PATCH 2/5] levels/intro: added geo_title_screen_issue intro.
+
+---
+ levels/intro/geo.c    | 24 ++++++++++++++++++++++++
+ levels/intro/header.h |  3 +++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/levels/intro/geo.c b/levels/intro/geo.c
+index 8ac70024..eaf12e17 100644
+--- a/levels/intro/geo.c
++++ b/levels/intro/geo.c
+@@ -44,6 +44,30 @@ const GeoLayout intro_geo_0002D0[] = {
+    GEO_END(),
+ };
+ 
++const GeoLayout intro_geo_000470[] = {
++   GEO_NODE_SCREEN_AREA(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
++   GEO_OPEN_NODE(),
++      GEO_ZBUFFER(0),
++      GEO_OPEN_NODE(),
++         GEO_NODE_ORTHO(100),
++         GEO_OPEN_NODE(),
++            GEO_BACKGROUND_COLOR(0x0000),
++         GEO_CLOSE_NODE(),
++      GEO_CLOSE_NODE(),
++      GEO_ZBUFFER(1),
++      GEO_OPEN_NODE(),
++         GEO_CAMERA_FRUSTUM(45, 128, 16384),
++         GEO_OPEN_NODE(),
++            GEO_CAMERA(0, 0, 0, 3200, 0, 0, 0, 0x00000000),
++            GEO_OPEN_NODE(),
++               GEO_ASM(0, geo_title_screen_issue),
++            GEO_CLOSE_NODE(),
++         GEO_CLOSE_NODE(),
++      GEO_CLOSE_NODE(),
++   GEO_CLOSE_NODE(),
++   GEO_END(),
++};
++
+ // 0x0E00035C
+ const GeoLayout intro_geo_00035C[] = {
+    GEO_NODE_SCREEN_AREA(0, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2),
+diff --git a/levels/intro/header.h b/levels/intro/header.h
+index 2fc66c03..4925d9cf 100644
+--- a/levels/intro/header.h
++++ b/levels/intro/header.h
+@@ -3,6 +3,9 @@
+ 
+ #include "types.h"
+ 
++extern const GeoLayout intro_geo_000470[];
++extern const Gfx intro_seg7_dl_0700B3A0[];
++
+ // geo
+ extern const GeoLayout intro_geo_0002D0[];
+ extern const GeoLayout intro_geo_00035C[];
+-- 
+2.17.3
+

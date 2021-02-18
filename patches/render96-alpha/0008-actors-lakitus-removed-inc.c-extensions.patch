@@ -1,0 +1,63 @@
+From b63f8efb18a64f08d9ccb2e48a0f44b8c42ef0dd Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Tue, 16 Feb 2021 04:45:37 -0400
+Subject: [PATCH] actors: lakitus: removed inc.c extensions.
+
+---
+ actors/lakitu_cameraman/model.inc.c | 10 +++++-----
+ actors/lakitu_enemy/model.inc.c     |  6 +++---
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/actors/lakitu_cameraman/model.inc.c b/actors/lakitu_cameraman/model.inc.c
+index df54728d..a016a028 100644
+--- a/actors/lakitu_cameraman/model.inc.c
++++ b/actors/lakitu_cameraman/model.inc.c
+@@ -27,19 +27,19 @@ Lights1 lakitu_cameraman_rod_lights = gdSPDefLights1(
+ 	0x73, 0x26, 0x12, 0x28, 0x28, 0x28);
+ 
+ u8 lakitu_cameraman_shell_new_rgba32[] = {
+-	#include "actors/lakitu_cameraman/shell_new.rgba32.inc.c"
++	"actors/lakitu_cameraman/shell_new.rgba32"
+ };
+ u8 lakitu_cameraman_goggles_rgba32[] = {
+-	#include "actors/lakitu_cameraman/goggles.rgba32.inc.c"
++	"actors/lakitu_cameraman/goggles.rgba32"
+ };
+ u8 lakitu_cameraman_eyes_rgba32[] = {
+-	#include "actors/lakitu_cameraman/eyes.rgba32.inc.c"
++	"actors/lakitu_cameraman/eyes.rgba32"
+ };
+ u8 lakitu_cameraman_camera_body_rgba32[] = {
+-	#include "actors/lakitu_cameraman/camera_body.rgba32.inc.c"
++	"actors/lakitu_cameraman/camera_body.rgba32"
+ };
+ u8 lakitu_cameraman_camera_innerbody_rgba32[] = {
+-	#include "actors/lakitu_cameraman/camera_innerbody.rgba32.inc.c"
++	"actors/lakitu_cameraman/camera_innerbody.rgba32"
+ };
+ Vtx lakitu_cameraman_000_offset_mesh_vtx_0[216] = {
+ 	{{{-68, 26, -43},0, {-16, 1008},{0x15, 0x7D, 0x7, 0xFF}}},
+diff --git a/actors/lakitu_enemy/model.inc.c b/actors/lakitu_enemy/model.inc.c
+index 9790acc6..69019c38 100644
+--- a/actors/lakitu_enemy/model.inc.c
++++ b/actors/lakitu_enemy/model.inc.c
+@@ -23,13 +23,13 @@ Lights1 lakitu_enemy_lakitu_eyes_lights = gdSPDefLights1(
+ 	0xFE, 0xFE, 0xFE, 0x28, 0x28, 0x28);
+ 
+ u8 lakitu_enemy_shell_new_rgba32[] = {
+-	#include "actors/lakitu_enemy/shell_new.rgba32.inc.c"
++	"actors/lakitu_enemy/shell_new.rgba32"
+ };
+ u8 lakitu_enemy_goggles_rgba32[] = {
+-	#include "actors/lakitu_enemy/goggles.rgba32.inc.c"
++	"actors/lakitu_enemy/goggles.rgba32"
+ };
+ u8 lakitu_enemy_eyes_rgba32[] = {
+-	#include "actors/lakitu_enemy/eyes.rgba32.inc.c"
++	"actors/lakitu_enemy/eyes.rgba32"
+ };
+ Vtx lakitu_enemy_000_offset_mesh_vtx_0[216] = {
+ 	{{{-56, 25, -42},0, {-16, 1008},{0x15, 0x7D, 0x7, 0xFF}}},
+-- 
+2.17.3
+

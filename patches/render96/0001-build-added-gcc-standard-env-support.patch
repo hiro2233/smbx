@@ -1,0 +1,75 @@
+From 707f6e4abc95a7c67ab9f5a21a6af13818d1f7ef Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Mon, 15 Feb 2021 21:42:13 -0400
+Subject: [PATCH 1/5] build: added gcc standard env support.
+
+---
+ Makefile | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 85eaaecf..0829f0c3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -110,7 +110,7 @@ ifeq ($(WINDOWS_BUILD),1)
+ endif
+ 
+ ifneq ($(TARGET_BITS),0)
+-  BITS := -m$(TARGET_BITS)
++#  BITS := -m$(TARGET_BITS)
+ endif
+ 
+ # Release (version) flag defs
+@@ -322,11 +322,11 @@ MIPSBIT := -32
+ ifeq ($(DEBUG),1)
+   OPT_FLAGS := -g
+ else
+-  OPT_FLAGS := -O2
++  OPT_FLAGS := -O3
+ endif
+ 
+ # Set BITS (32/64) to compile for
+-OPT_FLAGS += $(BITS)
++OPT_FLAGS += -funroll-loops -ffunction-sections -fdata-sections
+ 
+ ifeq ($(TARGET_WEB),1)
+   OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
+@@ -462,7 +462,7 @@ else
+   CXX := emcc
+ endif
+ 
+-LD := $(CC)
++LD := $(CXX)
+ 
+ ifeq ($(DISCORDRPC),1)
+   LD := $(CXX)
+@@ -491,7 +491,7 @@ else # Linux & other builds
+ endif
+ 
+ PYTHON := python3
+-SDLCONFIG := $(CROSS)sdl2-config
++SDLCONFIG := pkg-config sdl2
+ 
+ # configure backend flags
+ 
+@@ -632,7 +632,7 @@ ifeq ($(TARGET_WEB),1)
+ LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=20MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
+ 
+ else ifeq ($(WINDOWS_BUILD),1)
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
++  LDFLAGS := $(BITS) -Llib -lpthread $(BACKEND_LDFLAGS) -static
+   ifeq ($(CROSS),)
+     LDFLAGS += -no-pie
+   endif
+@@ -647,7 +647,7 @@ else ifeq ($(OSX_BUILD),1)
+   LDFLAGS := -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+ 
+ else
+-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
++  LDFLAGS := $(BITS) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+   ifeq ($(DISCORDRPC),1)
+     LDFLAGS += -ldl -Wl,-rpath .
+   endif
+-- 
+2.17.3
+

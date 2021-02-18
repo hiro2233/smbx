@@ -1,0 +1,64 @@
+From f0d05d6d26111358ee8cff603cf31219eecac470 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Sat, 13 Feb 2021 02:46:08 -0400
+Subject: [PATCH 3/5] makefile: added NOEXTRACT checking to allow build base
+ sounds.
+
+---
+ Makefile | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 72fb002..8be88fd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -703,10 +703,12 @@ res: $(BASEPACK_PATH)
+ $(BASEPACK_LST): $(EXE)
+ 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
+ 	@echo -n > $(BASEPACK_LST)
++ifeq ($(NOEXTRACT),)
+ 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sequences.bin sound/sequences.bin" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sound_data.ctl sound/sound_data.ctl" >> $(BASEPACK_LST)
+ 	@echo "$(BUILD_DIR)/sound/sound_data.tbl sound/sound_data.tbl" >> $(BASEPACK_LST)
++endif
+ 	@$(foreach f, $(wildcard $(SKYTILE_DIR)/*), echo $(f) gfx/$(f:$(BUILD_DIR)/%=%) >> $(BASEPACK_LST);)
+ 	@find actors -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
+ 	@find levels -name \*.png -exec echo "{} gfx/{}" >> $(BASEPACK_LST) \;
+@@ -871,7 +873,9 @@ $(ENDIAN_BITWIDTH): tools/determine-endian-bitwidth.c
+ 	@rm $@.dummy2
+ 
+ $(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(ENDIAN_BITWIDTH)
++ifeq ($(NOEXTRACT),)
+ 	$(PYTHON) tools/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
++endif
+ 
+ $(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_BIN_DIR)/sound_data.ctl
+ 	@true
+@@ -881,8 +885,10 @@ $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json sound/s
+ 	$(PYTHON) tools/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
+ else
+ $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json sound/sequences/ sound/sequences/$(VERSION)/ $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
++ifeq ($(NOEXTRACT),)
+ 	$(PYTHON) tools/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
+ endif
++endif
+ 
+ $(SOUND_BIN_DIR)/bank_sets: $(SOUND_BIN_DIR)/sequences.bin
+ 	@true
+@@ -916,8 +922,10 @@ $(BUILD_DIR)/include/level_headers.h: levels/level_headers.h.in
+ $(BUILD_DIR)/assets/mario_anim_data.c: $(wildcard assets/anims/*.inc.c)
+ 	$(PYTHON) tools/mario_anims_converter.py > $@
+ 
+-#$(BUILD_DIR)/assets/demo_data.c: assets/demo_data.json $(wildcard assets/demos/*.bin)
+-#	$(PYTHON) tools/demo_data_converter.py assets/demo_data.json $(VERSION_CFLAGS) > $@
++ifeq ($(NOEXTRACT),)
++$(BUILD_DIR)/assets/demo_data.c: assets/demo_data.json $(wildcard assets/demos/*.bin)
++	$(PYTHON) tools/demo_data_converter.py assets/demo_data.json $(VERSION_CFLAGS) > $@
++endif
+ 
+ # Source code
+ $(BUILD_DIR)/levels/%/leveldata.o: OPT_FLAGS := -g
+-- 
+2.17.3
+

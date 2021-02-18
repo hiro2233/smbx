@@ -1,0 +1,40 @@
+From 59a7d81dfe499fd047849511f692e132f2e110fa Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Mon, 15 Feb 2021 21:55:00 -0400
+Subject: [PATCH 4/5] levels/intro: added issue script.
+
+---
+ levels/intro/script.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/levels/intro/script.c b/levels/intro/script.c
+index 4975dbb2..96211391 100644
+--- a/levels/intro/script.c
++++ b/levels/intro/script.c
+@@ -26,10 +26,23 @@ const LevelScript level_intro_entry_1[] = {
+     ALLOC_LEVEL_POOL(),
+ 
+     AREA(/*index*/ 1, intro_geo_0002D0),
++    AREA(/*index*/ 2, intro_geo_000470),
+     END_AREA(),
+ 
+     FREE_LEVEL_POOL(),
++    SLEEP(/*frames*/ 2),
++    LOAD_AREA(/*area*/ 2),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 10, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 10),
++    SLEEP(/*frames*/ 90),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 10, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 10),
++    SLEEP(/*frames*/ 30),
++    CMD2A(/*unk2*/ 1),
++
+     LOAD_AREA(/*area*/ 1),
++    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 5, /*color*/ 0x00, 0x00, 0x00),
++    SLEEP(/*frames*/ 5),
+     CALL(/*arg*/ 0, /*func*/ lvl_intro_update),
+     SLEEP(/*frames*/ 75),
+     TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0x00, 0x00, 0x00),
+-- 
+2.17.3
+
