@@ -1,0 +1,122 @@
+From 274a8a6739c0742657580f65bb0ff357ee5caa11 Mon Sep 17 00:00:00 2001
+From: "Hiroshi Takey F. (hiro2233)" <htakey@gmail.com>
+Date: Thu, 18 Feb 2021 08:23:52 -0400
+Subject: [PATCH] all: added issue sprite segment.
+
+---
+ levels/intro/leveldata.c | 36 ++++++++++++++++++++++++++++++++++++
+ src/game/segment7.h      |  1 +
+ src/menu/intro_geo.c     | 23 ++++++++++++++++++++---
+ 3 files changed, 57 insertions(+), 3 deletions(-)
+
+diff --git a/levels/intro/leveldata.c b/levels/intro/leveldata.c
+index f3303c80..9f7d50d3 100644
+--- a/levels/intro/leveldata.c
++++ b/levels/intro/leveldata.c
+@@ -15622,6 +15622,22 @@ static const Vtx intro_seg7_vertex_0700B460[] = {
+     {{{   268,    196,     -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
+ };
+ 
++#define ISSUE_HEIGHT  32
++#define ISSUE_WIDTH  152
++
++#define ISSUE_CENTERED_X (SCREEN_WIDTH / 2) - (ISSUE_WIDTH / 2)
++#define ISSUE_CENTERED_Y (SCREEN_HEIGHT / 2) - (ISSUE_HEIGHT / 2)
++
++#define ISSUE_POS_X -15
++#define ISSUE_POS_Y 5
++
++static const Vtx intro_seg7_vertex_issue[] = {
++    {{{   ISSUE_POS_X              , ISSUE_POS_Y               , -1}, 0, {     0,    2048}, {0xff, 0xff, 0xff, 0xff}}},
++    {{{   ISSUE_POS_X + ISSUE_WIDTH, ISSUE_POS_Y               , -1}, 0, {  8192,    2048}, {0xff, 0xff, 0xff, 0xff}}},
++    {{{   ISSUE_POS_X + ISSUE_WIDTH, ISSUE_POS_Y + ISSUE_HEIGHT, -1}, 0, {  8192,      0}, {0xff, 0xff, 0xff, 0xff}}},
++    {{{   ISSUE_POS_X              , ISSUE_POS_Y + ISSUE_HEIGHT, -1}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
++};
++
+ #ifdef VERSION_EU
+ // 0x0700B4A0 - 0x0700B4A2
+ ALIGNED8 static const u8 intro_seg7_texture_0700B4A0[] = "levels/intro/2_eu_copyright.rgba16";
+@@ -15637,6 +15653,8 @@ ALIGNED8 static const u8 intro_seg7_texture_0700B4A0[] = "levels/intro/2_copyrig
+ ALIGNED8 static const u8 intro_seg7_texture_0700C4A0[] = "levels/intro/3_tm.rgba16";
+ #endif
+ 
++ALIGNED8 static const u8 intro_seg7_texture_issue[] = "levels/intro/4_issue.rgba16";
++
+ // 0x0700C6A0 - 0x0700C790
+ const Gfx intro_seg7_dl_0700C6A0[] = {
+     gsDPPipeSync(),
+@@ -15660,6 +15678,24 @@ const Gfx intro_seg7_dl_0700C6A0[] = {
+     gsSPEndDisplayList(),
+ };
+ 
++const Gfx intro_seg7_dl_issue[] = {
++    gsDPPipeSync(),
++    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
++    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
++
++    gsDPLoadTextureBlock(intro_seg7_texture_issue, G_IM_FMT_RGBA, G_IM_SIZ_16b, ISSUE_WIDTH * 2, ISSUE_HEIGHT * 2, 0, G_TX_CLAMP, G_TX_CLAMP, 7, 4, G_TX_NOLOD, G_TX_NOLOD),
++    gsSPVertex(intro_seg7_vertex_issue, 4, 0),
++    gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
++
++    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
++    gsDPPipeSync(),
++    gsSPSetGeometryMode(G_LIGHTING),
++    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
++    gsDPSetEnvColor(255, 255, 255, 255),
++    gsDPSetRenderMode(G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2),
++    gsSPEndDisplayList(),
++};
++
+ // 0x0700C790
+ const f32 intro_seg7_table_0700C790[] = {
+     0.016000f, 0.052000f, 0.002500f, 0.148300f,
+diff --git a/src/game/segment7.h b/src/game/segment7.h
+index 3ed73bab..6ad28d1c 100644
+--- a/src/game/segment7.h
++++ b/src/game/segment7.h
+@@ -29,5 +29,6 @@ extern Gfx *intro_seg7_dl_0700C6A0;
+ extern f32 intro_seg7_table_0700C790[];
+ extern f32 intro_seg7_table_0700C880[];
+ extern const Gfx intro_seg7_dl_0700B3A0[];
++extern const Gfx intro_seg7_dl_issue[];
+ 
+ #endif // SEGMENT7_H
+diff --git a/src/menu/intro_geo.c b/src/menu/intro_geo.c
+index 0be4e95a..cf4094f9 100644
+--- a/src/menu/intro_geo.c
++++ b/src/menu/intro_geo.c
+@@ -193,11 +193,28 @@ Gfx *geo_title_screen(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
+ }
+ #endif
+ 
+-Gfx *geo_title_screen_issue(s32 sp50, struct GraphNode *sp54, UNUSED void *context) {
+-    Gfx *displayList;            // sp48
+-    displayList = NULL;
++Gfx *geo_title_screen_issue(s32 sp50, struct GraphNode *sp54, UNUSED void *context)
++{
++    struct GraphNode *graphNode = sp54;
++
++    Gfx *displayList = NULL;
++    Gfx *displayListIter = NULL;
++
+     print_text_centered(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Builded by");
+     print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko");
++
++    displayList = alloc_display_list(5 * sizeof(*displayList));
++    displayListIter = displayList;
++    gSPDisplayList(displayListIter++, dl_proj_mtx_fullscreen);
++
++    if (0) {
++    }
++
++    graphNode->flags = (graphNode->flags & 0xFF) | 0x100;
++    gDPSetRenderMode(displayListIter++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
++    gSPDisplayList(displayListIter++, &intro_seg7_dl_issue);
++    gSPEndDisplayList(displayListIter);
++
+     return displayList;
+ }
+ 
+-- 
+2.17.3
+
