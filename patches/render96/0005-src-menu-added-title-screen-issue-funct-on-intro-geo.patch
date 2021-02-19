@@ -29,7 +29,7 @@ index 1d3be071..e8f75a01 100644
 +    Gfx *displayList;            // sp48
 +    displayList = NULL;
 +    print_text_centered(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Builded by");
-+    print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko");
++    print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko Tools");
 +    return displayList;
 +}
 +

@@ -100,7 +100,7 @@ index 0be4e95a..cf4094f9 100644
 +    Gfx *displayListIter = NULL;
 +
      print_text_centered(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "Builded by");
-     print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko");
+     print_text_centered(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 20, "Kokoroko Tools");
 +
 +    displayList = alloc_display_list(5 * sizeof(*displayList));
 +    displayListIter = displayList;
